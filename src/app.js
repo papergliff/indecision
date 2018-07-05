@@ -3,41 +3,50 @@ console.log('App.js is running!')
 const app = {
   title: 'Indecision',
   subtitle: 'This is some info',
-  options: ['One', 'Two']
+  options: []
 }
 
-const template = (
-  <div>
-    <h1>{app.title}</h1> 
-    {app.subtitle && <p>{app.subtitle}</p>}
-    <p>{app.options.length > 0 ? 'Your options: ' + app.options.join(" ") : 'No options'}</p>
-    <ol>
-      <li>Item one</li>
-      <li>Item two</li>
-    </ol>
-  </div>
-)
+const onFormSubmit = e => {
+  e.preventDefault()
 
-const user = {
-  name: 'Papergliff',
-  age: 23,
-  location: 'Russia'
-}
+  const option = e.target.elements.option.value
 
-const getLocation = location => {
-  if (location) {
-    return <p>Location: {location}</p>
+  if (option) {
+    app.options.push(option)
+    e.target.elements.option.value = ''
+    renderIndecisionApp()
   }
 }
 
-const templateTwo = (
-  <div>
-    <h1>{user.name ? user.name : 'Anonymous'}</h1>
-    {(user.age && user.age >= 18) && <p>Age: {user.age}</p>} 
-    {getLocation(user.location)}
-  </div>
-)
+const removeAll = e => {
+  e.preventDefault()
+
+  app.options = []
+  renderIndecisionApp()
+}
 
 const appRoot = document.getElementById('app')
 
-ReactDOM.render(template, appRoot)
+const renderIndecisionApp = () => {
+  const template = (
+    <div>
+      <h1>{app.title}</h1> 
+      {app.subtitle && <p>{app.subtitle}</p>}
+      <p>{app.options.length > 0 ? 'Your options: ' + app.options.join(" ") : 'No options'}</p>
+      <p>{app.options.length}</p>
+      <button onClick={removeAll}>Remove All</button>
+      <ol>
+        <li>Item one</li>
+        <li>Item two</li>
+      </ol>
+      <form onSubmit={onFormSubmit}>
+        <input type="text" name="option"/>
+        <button>Add Option</button>
+      </form>
+    </div>
+  )
+
+  ReactDOM.render(template, appRoot)
+}
+
+renderIndecisionApp()
